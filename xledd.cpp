@@ -32,29 +32,20 @@ int main() {
     set_led (scrollLed, scrollLock);
     while (true) {
         XkbGetState (dpy, XkbUseCoreKbd, &xkbState);
-        switch (xkbState.locked_mods & capsMask) {
-        case 0:
+        if ((xkbState.locked_mods & capsMask) == 0) {
             led_trigger (capsLed, capsLock, false);
-            break;
-        default:
+        } else {
             led_trigger (capsLed, capsLock, true);
-            break;
         }
-        switch (xkbState.locked_mods & numMask) {
-        case 0:
+        if ((xkbState.locked_mods & numMask) == 0) {
             led_trigger (numLed, numLock, false);
-            break;
-        default:
+        } else {
             led_trigger (numLed, numLock, true);
-            break;
         }
-        switch (xkbState.group) {
-        case 0:
+        if (xkbState.group == 0) {
             led_trigger (scrollLed, scrollLock, false);
-            break;
-        default:
+        } else {
             led_trigger (scrollLed, scrollLock, true);
-            break;
         }
         nanosleep (&ts, NULL);
     }
