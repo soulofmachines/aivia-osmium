@@ -1,13 +1,14 @@
 //g++ -lX11 -Wall -o xledd xledd.cpp
 
-#include <X11/XKBlib.h>
 #include <time.h>
-
-Display *dpy;
+#include <unistd.h>
+#include <X11/XKBlib.h>
 
 bool capsLock = false, numLock = false, scrollLock = false;
 int capsLed = 1, numLed = 2, scrollLed = 3;
 int capsMask = 2, numMask = 16;
+
+Display *dpy;
 
 void set_led (int led, bool led_mode) {
     XKeyboardControl values;
@@ -24,6 +25,7 @@ void led_trigger (int led, bool &led_mode, bool led_mode_new) {
 }
 
 int main() {
+    daemon (0, 0);
     dpy = XOpenDisplay (NULL);
     XkbStateRec xkbState;
     struct timespec ts = {0, 100000000};
