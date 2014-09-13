@@ -1,0 +1,23 @@
+https://bugs.freedesktop.org/show_bug.cgi?id=17888
+
+diff -Naur xorg-server-1.15.1.orig/xkb/xkbLEDs.c xorg-server-1.15.1/xkb/xkbLEDs.c
+--- xorg-server-1.15.1.orig/xkb/xkbLEDs.c	2014-03-22 09:37:53.000000000 +0400
++++ xorg-server-1.15.1/xkb/xkbLEDs.c	2014-09-05 15:42:34.441125993 +0400
+@@ -100,7 +100,7 @@
+     Bool ctrlChange, stateChange;
+     XkbStatePtr state;
+ 
+-    if ((map->flags & XkbIM_NoExplicit) ||
++    if ((FALSE) ||
+         ((map->flags & XkbIM_LEDDrivesKB) == 0))
+         return FALSE;
+     ctrlChange = stateChange = FALSE;
+@@ -953,7 +953,7 @@
+             continue;
+         affected &= ~bit;
+         map = &sli->maps[i];
+-        if (map->flags & XkbIM_NoExplicit) {
++        if (FALSE) {
+             sli->explicitState &= ~bit;
+             continue;
+         }
