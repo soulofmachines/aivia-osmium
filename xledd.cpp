@@ -1,6 +1,5 @@
 //g++ -lX11 -Wall -o xledd xledd.cpp
 
-#include <time.h>
 #include <unistd.h>
 #include <X11/XKBlib.h>
 
@@ -28,7 +27,6 @@ int main() {
     daemon (0, 0);
     dpy = XOpenDisplay (NULL);
     XkbStateRec xkbState;
-    struct timespec ts = {0, 100000000};
     set_led (capsLed, capsLock);
     set_led (numLed, numLock);
     set_led (scrollLed, scrollLock);
@@ -49,7 +47,7 @@ int main() {
         } else {
             led_trigger (scrollLed, scrollLock, true);
         }
-        nanosleep (&ts, NULL);
+        usleep (100*1000);
     }
     XCloseDisplay(dpy);
     return 0;
