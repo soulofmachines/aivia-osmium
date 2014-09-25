@@ -1,5 +1,9 @@
 //g++ -lX11 -Wall -o xledd xledd.cpp
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/file.h>
 #include <unistd.h>
 #include <X11/XKBlib.h>
 
@@ -24,7 +28,20 @@ void led_trigger (int led, bool &led_mode, bool led_mode_new) {
 }
 
 int main() {
-    daemon (0, 0);
+    daemon (1, 1);
+    char lockFile[64] = "";
+    strcat (lockFile, "/tmp/xledd");
+    strcat (lockFile, getenv ("DISPLAY"));
+    strcat (lockFile, ".lock");
+    FILE *lock = fopen (lockFile, "w+");
+    if (lock == NULL) {
+        printf ("error\n");
+        return 1;
+    }
+    if (flock (fileno (lock), LOCK_EX | LOCK_NB) != 0) {
+        printf ("exist\n");
+        return 0;
+    };
     dpy = XOpenDisplay (NULL);
     XkbStateRec xkbState;
     set_led (capsLed, capsLock);
@@ -49,6 +66,8 @@ int main() {
         }
         usleep (100*1000);
     }
-    XCloseDisplay(dpy);
+    flock (fileno (lock), LOCK_UN);
+    fclose (lock);
+    XCloseDisplay (dpy);
     return 0;
 }
